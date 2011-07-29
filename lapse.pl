@@ -6,7 +6,7 @@ use Data::Dumper;
 use Carp;
 use Getopt::Long;
 use File::Copy qw/move/;
-
+use Time::Duration;
 
 sub usage {
 	print "USAGE: $0 <NAME> -I <interval> [-F <numframes> | -D <duration>] [--hookscript=/path/to/script]\n";
@@ -18,8 +18,8 @@ our ($interval, $numframes, $duration, $fps); # Commonly used options
 $fps = 20;
 
 GetOptions(\%opt,
-	'hookscript|H=s', 'interval|I=i' => \$interval,
-	'numframes|F=i' => \$numframes, 'duration|D=i' => \$duration,
+	'hookscript|H=s', 'interval|I=s' => \$interval,
+	'numframes|F=i' => \$numframes, 'duration|D=s' => \$duration,
 	'fps=i' => \$fps
 ) or usage();
 
@@ -37,9 +37,13 @@ if ( -d $Name ) {
 	exit(1);
 }
 
-#SETUP
-mkdir($Name) or croak($!);
-chdir($Name) or croak($!);
+for my $var (\$duration, \$interval) {
+	if ($$var =~ /(\d+)\s*(s|m|h)/) {
+		$$var = $1;
+		$$var = $$var * 60 if ($2 eq 'm');
+		$$var = $$var * 360 if ($2 eq 'h');
+	}
+}
 
 if ($duration) {
 	if ($numframes) { print "Ignoring specified numframes in favour of duration argument\n"; }
@@ -51,12 +55,23 @@ if ($duration) {
 		$numframes = 30;
 	}
 }
+$duration ||= $numframes * $fps;
+
+print "Taking photos every $interval seconds\n\n";
+
+my $howlong = ($numframes * $interval);
+printf("Final video duration:\t\t%s\nTime to create:\t\t\t%s\n",
+	duration($duration), duration($howlong));
+print "\nYou can press Ctrl+C now to cancel (waiting 5s)\n";
+sleep 5;
+
+#SETUP
+mkdir($Name) or croak($!);
+chdir($Name) or croak($!);
 
 for (<capt*.jpg>) {
 	unlink($_);
 }
-print "Taking photos every $interval seconds\n";
-
 #CAPTURE
 # Settings used for Canon EOS 400D
 # $ gphoto2 --get-config imageformat
@@ -79,6 +94,7 @@ print "Taking photos every $interval seconds\n";
 #		Choice: 0 Internal RAM
 #		Choice: 1 Memory card
 
+$opt{hookscript} //= '/home/luke/code/timelapse/capture_hook.pl';
 
 system('gphoto2',
 	"-F$numframes",

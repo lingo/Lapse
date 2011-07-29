@@ -42,7 +42,7 @@ sub _init {
 
     Gnome2::Program->init('Preview', '1.0');
 
-    my $src = 'lapse_preview.glade';
+    my $src = '/home/luke/code/timelapse/lapse_preview.glade';
     my $gui = $self->{_gui} = Gtk2::GladeXML->new($src);
 	my $win = $gui->get_widget('window');
 
