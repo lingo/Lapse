@@ -78,17 +78,22 @@ sleep 5 unless $opt{sim};
 mkdir($Name) or croak($!) unless $opt{sim};
 chdir($Name) or croak($!) unless $opt{sim};
 
-unless($opt{sim}) {
-	for (<capt*.jpg>) {
-		unlink($_);
-	}
-}
+# Set default hook script if not overridden from CLI args.
+$opt{hookscript} //= $SOURCE_DIR . '/capture_hook.pl';
+
+# Set environment vars for child scripts to use.
+$ENV{LAPSE_INTERVAL} = $interval;
+$ENV{LAPSE_NUMFRAMES} = $numframes;
+$ENV{LAPSE_DURATION} = $duration;
+$ENV{LAPSE_FPS} = $fps;
+$ENV{LAPSE_STARTTIME} = time();
+
 #CAPTURE
 # Settings used for Canon EOS 400D
 # $ gphoto2 --get-config imageformat
 # 		Label: Image Format                                                            
 # 		Type: RADIO
-# 		Current: Small Normal JPEG
+# 		* Current: Small Normal JPEG *
 # 		Choice: 0 Large Fine JPEG
 # 		Choice: 1 Large Normal JPEG
 # 		Choice: 2 Medium Fine JPEG
@@ -101,18 +106,9 @@ unless($opt{sim}) {
 # $ gphoto2 --get-config capturetarget
 #		Label: Capture Target                                                          
 #		Type: RADIO
-#		Current: Internal RAM
+#		* Current: Internal RAM *
 #		Choice: 0 Internal RAM
 #		Choice: 1 Memory card
-
-$opt{hookscript} //= $SOURCE_DIR . '/capture_hook.pl';
-
-$ENV{LAPSE_INTERVAL} = $interval;
-$ENV{LAPSE_NUMFRAMES} = $numframes;
-$ENV{LAPSE_DURATION} = $duration;
-$ENV{LAPSE_FPS} = $fps;
-$ENV{LAPSE_STARTTIME} = time();
-
 if ($opt{sim}) {
 	system('./camsim.sh', $opt{hookscript});
 } else {
@@ -120,7 +116,13 @@ if ($opt{sim}) {
 		"-F$numframes",
 		"-I$interval",
 		($opt{hookscript} ? "--hook-script=$opt{hookscript}" : ''),
-		qw{ --set-config imageformat=5 --set-config capturetarget=0 --set-config capture=on --capture-image-and-download }
+		## NOTE: Camera-specific settings here ##
+		qw{
+			--set-config imageformat=5
+			--set-config capturetarget=0
+			--set-config capture=on
+			--capture-image-and-download
+		}
 	);
 }
 

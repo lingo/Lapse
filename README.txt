@@ -42,3 +42,13 @@ Optional (if you use the defaults, these are required):
 	- sudo aptitude install libgtk2-perl libgtk2-gladexml-perl # For preview.pl, as below
 	- cpan Gtk2::Ex::MPlayerEmbed; # For preview.pl, not needed if you omit, or use custom, hookscript
 	- sudo aptitude install mplayer # For movie preview functions, still somewhat Work in progress here.
+
+
+## Configuring for your camera ##
+
+Currently the program is targeting Canon EOS 400D
+What you'll need to look at are the config settings for your camera.
+
+See here: http://www.gphoto.org/doc/remote/
+
+Also see the source of lapse.pl, where it says '## NOTE: Camera-specific settings here ##'
