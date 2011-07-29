@@ -65,9 +65,11 @@ lapse.pl				# MAIN PROGRAM
 camsim.sh				# Simulator script used when testing, activated by running lapse.pl with --sim
 
 hookscripts/			# Optional contributed hookscripts
+
 	hook_preview.pl			# Preview last image taken in a window which won't pop to top each time.
 
 preview.pl				# Simple image or video preview program.
+
 preview.glade			# Glade resource file for above.
 
 README.md				# THIS FILE
