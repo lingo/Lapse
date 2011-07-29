@@ -5,7 +5,9 @@ use Time::Duration;
 my ($action, $arg) = ($ENV{ACTION}, $ENV{ARGUMENT});
 #print "Hook: Action =  $action;  ARGUMENT = $arg\n";
 
-my $cmd = '/home/luke/code/timelapse/preview.pl';
+print Dumper(\%ENV);
+my $path = $ENV{LAPSE_SOURCE_DIR};
+my $cmd = $path . '/preview.pl';
 
 return unless ($action eq 'download');
 

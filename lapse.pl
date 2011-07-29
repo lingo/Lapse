@@ -13,6 +13,14 @@ sub usage {
 	exit(1);
 }
 
+our $SOURCE_DIR = '~/timelapse';
+{
+	use Cwd qw/realpath/;
+	use File::Basename;
+	$SOURCE_DIR = realpath(dirname($0));
+	$ENV{LAPSE_SOURCE_DIR} = $SOURCE_DIR;
+}
+
 our %opt;
 our ($interval, $numframes, $duration, $fps); # Commonly used options
 $fps = 20;
@@ -97,7 +105,7 @@ unless($opt{sim}) {
 #		Choice: 0 Internal RAM
 #		Choice: 1 Memory card
 
-$opt{hookscript} //= '/home/luke/code/timelapse/capture_hook.pl';
+$opt{hookscript} //= $SOURCE_DIR . '/capture_hook.pl';
 
 $ENV{LAPSE_INTERVAL} = $interval;
 $ENV{LAPSE_NUMFRAMES} = $numframes;

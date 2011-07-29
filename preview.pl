@@ -18,7 +18,7 @@ use IO::Socket;
 use Gtk2::Helper;
 use feature ':5.10';
 
-our ($scaleX, $scaleY) = (640,480);
+our ($scaleX, $scaleY) = (640,480); # Preview image scale. TODO: Make this a CLI option
 
 our $SOCKETFILE = dirname($0) . '/.preview_socket';
 
@@ -42,7 +42,7 @@ sub _init {
 
     Gnome2::Program->init('Preview', '1.0');
 
-    my $src = '/home/luke/code/timelapse/preview.glade';
+    my $src = $ENV{LAPSE_SOURCE_DIR}	. '/preview.glade';
     my $gui = $self->{_gui} = Gtk2::GladeXML->new($src);
 	my $win = $gui->get_widget('window');
 

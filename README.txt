@@ -32,6 +32,13 @@ See the gphoto2 documentation for more info on hookscripts
 
 ## Requirements ##
 
-sudo aptitude install libtime-duration-perl 
-sudo aptitude install libgtk2-perl libgtk2-gladexml-perl # For preview.pl, as below
-cpan Gtk2::Ex::MPlayerEmbed; # For preview.pl, not needed if you omit, or use custom, hookscript
+Programs:
+	- sudo aptitude install gphoto2 ffmpeg # Core requirements
+
+Perl libraries:
+	- sudo aptitude install libtime-duration-perl 
+
+Optional (if you use the defaults, these are required):
+	- sudo aptitude install libgtk2-perl libgtk2-gladexml-perl # For preview.pl, as below
+	- cpan Gtk2::Ex::MPlayerEmbed; # For preview.pl, not needed if you omit, or use custom, hookscript
+	- sudo aptitude install mplayer # For movie preview functions, still somewhat Work in progress here.
