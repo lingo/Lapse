@@ -4,8 +4,11 @@ use Data::Dumper;
 my ($action, $arg) = ($ENV{ACTION}, $ENV{ARGUMENT});
 #print "Hook: Action =  $action;  ARGUMENT = $arg\n";
 
+my $cmd = qx{pwd};
+chomp $cmd;
+$cmd .= '/preview.pl';
+
 if ($action eq 'download') {
-    print "Displaying preview";
-    $cmdline = "eog '$arg' &";
-	#system($cmdline);
+	system("$cmd $arg &") == 0 or croak $!;
+	system("$cmd --status $arg") == 0 or croak $!;
 }
