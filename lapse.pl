@@ -18,6 +18,7 @@ our ($interval, $numframes, $duration, $fps); # Commonly used options
 $fps = 20;
 
 GetOptions(\%opt,
+	'sim',
 	'hookscript|H=s', 'interval|I=s' => \$interval,
 	'numframes|F=i' => \$numframes, 'duration|D=s' => \$duration,
 	'fps=i' => \$fps
@@ -63,14 +64,16 @@ my $howlong = ($numframes * $interval);
 printf("Final video duration:\t\t%s\nTime to create:\t\t\t%s\n",
 	duration($duration), duration($howlong));
 print "\nYou can press Ctrl+C now to cancel (waiting 5s)\n";
-sleep 5;
+sleep 5 unless $opt{sim};
 
 #SETUP
-mkdir($Name) or croak($!);
-chdir($Name) or croak($!);
+mkdir($Name) or croak($!) unless $opt{sim};
+chdir($Name) or croak($!) unless $opt{sim};
 
-for (<capt*.jpg>) {
-	unlink($_);
+unless($opt{sim}) {
+	for (<capt*.jpg>) {
+		unlink($_);
+	}
 }
 #CAPTURE
 # Settings used for Canon EOS 400D
@@ -96,12 +99,26 @@ for (<capt*.jpg>) {
 
 $opt{hookscript} //= '/home/luke/code/timelapse/capture_hook.pl';
 
-system('gphoto2',
-	"-F$numframes",
-	"-I$interval",
-	($opt{hookscript} ? "--hook-script=$opt{hookscript}" : ''),
-	qw{ --set-config imageformat=5 --set-config capturetarget=0 --set-config capture=on --capture-image-and-download }
-);
+$ENV{LAPSE_INTERVAL} = $interval;
+$ENV{LAPSE_NUMFRAMES} = $numframes;
+$ENV{LAPSE_DURATION} = $duration;
+$ENV{LAPSE_FPS} = $fps;
+$ENV{LAPSE_STARTTIME} = time();
+
+if ($opt{sim}) {
+	system('./camsim.sh', $opt{hookscript});
+} else {
+	system('gphoto2',
+		"-F$numframes",
+		"-I$interval",
+		($opt{hookscript} ? "--hook-script=$opt{hookscript}" : ''),
+		qw{ --set-config imageformat=5 --set-config capturetarget=0 --set-config capture=on --capture-image-and-download }
+	);
+}
+
+if ($opt{sim}) {
+	exit 0;
+}
 
 #ENCODE
 if ( -f 'capt0000.jpg' ) {

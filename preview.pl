@@ -86,7 +86,7 @@ sub on_data_received {
 	print " -> $txt\n";
 	my $gui = $self->{_gui};
 	if ($txt =~ /--(?<command>\w+)(\s+(?<args>.*))?/s) {
-		#print Dumper(\%+);
+		print Dumper(\%+);
 		#print $+{args} . "\n";
 		my $arg = $+{args};
 		given ($+{command}) {
@@ -168,7 +168,8 @@ package main;
 use Fcntl qw(:flock);
 use IO::Socket;
 
-unless (flock(DATA, LOCK_EX|LOCK_NB)) {
+my $sock = new IO::Socket::INET ( LocalPort => 251177, Proto => 'udp');
+unless ($sock) { #flock(DATA, LOCK_EX|LOCK_NB)) {
 	my $client = IO::Socket::INET->new(PeerPort => 251177, PeerAddr => '127.0.0.1', Proto => 'udp')
 		or croak $!;
 	$client->autoflush();
@@ -176,7 +177,26 @@ unless (flock(DATA, LOCK_EX|LOCK_NB)) {
 	$client->close;
 	exit;
 }
+$sock->close();
 
-Preview->run(@ARGV);
+# REAPER code from http://www.rocketaware.com/perl/perlipc/Signals.htm#Signals
+sub REAPER {
+	my $waitedpid = wait;
+	# loathe sysV: it makes us not only reinstate
+	# the handler, but place it after the wait
+	$SIG{CHLD} = \&REAPER;
+}
+$SIG{CHLD} = \&REAPER;
+# now do something that forks.
+
+our $pid;
+unless($pid = fork()) {
+	use POSIX qw/setsid/;
+	setsid();
+	open STDIN, '</dev/null';
+	open STDOUT, '>>/dev/null';
+	open STDERR, '>>/dev/null';
+	Preview->run(@ARGV);
+}
 
 __DATA__
