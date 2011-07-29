@@ -81,6 +81,7 @@ chdir($Name) or croak($!) unless $opt{sim};
 # Set default hook script if not overridden from CLI args.
 # NOTE: Decided this is better manually selected
 #$opt{hookscript} //= $SOURCE_DIR . '/hookscripts/hook_preview.pl';
+$opt{hookscript} //= '';
 
 # Set environment vars for child scripts to use.
 $ENV{LAPSE_INTERVAL} = $interval;
