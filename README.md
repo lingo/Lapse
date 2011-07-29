@@ -7,7 +7,21 @@ Luke Hudson <lukeletters@gmail.com>
 
 Badly organised but hpefully useful scripts to make timelapse films from Canon EOS (Especially 400D).
 
-lapse.pl is the main script:
+lapse.pl is the main script.  It takes arguments decribing the output film,
+then creates the directory given by `<NAME>` and proceeds to take photos with
+your camera until the required number of frames is reached (or Ctrl+C pressed).
+
+Then *lapse.pl* will use `ffmpeg` to encode a video from those JPG files, which it will then play with *mplayer*
+
+## TODO ##
+
+* Tidying of code and linkage between files.
+
+* Configurable programs for encode, possibly, but definiely for playback.
+
+* Easy-to-configure setup for various cameras.
+
+* Possibly a GUI control of this script too.
 
 ## Usage ##
 
