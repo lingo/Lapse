@@ -34,7 +34,7 @@ Eg.  '10m' means 1 photo every 10 min, and '1' means 1 every second.
 
 `-D` Duration of final video, specified using same format as -I
 
-`--hookscript`  This defaults to emty. However, provided is `hookscripts/hook_preview.pl` which attemps to show a preview of last image taken, using `./preview.pl`
+`--hookscript`  This defaults to emty. However, provided is `hookscripts/hook_preview.pl` which attempts to show a preview of last image taken, using `./preview.pl`
 See the gphoto2 documentation for more info on hookscripts
 
 `--fps`  Frames per second of output video.  Defaults to 20 (slightly slower than normal film at 24)
