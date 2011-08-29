@@ -34,7 +34,7 @@ Eg.  '10m' means 1 photo every 10 min, and '1' means 1 every second.
 
 `-D` Duration of final video, specified using same format as -I
 
-`--hookscript`  This defaults to emty. However, provided is `hookscripts/hook_preview.pl` which attempts to show a preview of last image taken, using `./preview.pl`
+`--hookscript`  This defaults to empty. However, provided is `hookscripts/hook_preview.pl` which attempts to show a preview of last image taken, using `./preview.pl`
 See the gphoto2 documentation for more info on hookscripts
 
 `--fps`  Frames per second of output video.  Defaults to 20 (slightly slower than normal film at 24)
@@ -47,15 +47,18 @@ See the gphoto2 documentation for more info on hookscripts
 ## Requirements ##
 
 Programs:
- * sudo aptitude install gphoto2 ffmpeg # Core requirements
+
+* sudo aptitude install gphoto2 ffmpeg # Core requirements
 
 Perl libraries:
- * sudo aptitude install libtime-duration-perl 
+
+* sudo aptitude install libtime-duration-perl 
 
 Optional (if you use the defaults, these are required):
- * sudo aptitude install libgtk2-perl libgtk2-gladexml-perl # For preview.pl, as below
- * cpan Gtk2::Ex::MPlayerEmbed; # For preview.pl, not needed if you omit, or use custom, hookscript
- * sudo aptitude install mplayer # For movie preview functions, still somewhat Work in progress here.
+
+* sudo aptitude install libgtk2-perl libgtk2-gladexml-perl # For preview.pl, as below
+* cpan Gtk2::Ex::MPlayerEmbed; # For preview.pl, not needed if you omit, or use custom, hookscript
+* sudo aptitude install mplayer # For movie preview functions, still somewhat Work in progress here.
 
 
 ## Configuring for your camera ##
